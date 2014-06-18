@@ -141,6 +141,12 @@ class AKTT_Account {
 			if ($content->result == 'success') {
 				return $content->response;
 			}
+
+			ob_start();
+			var_dump( $response );
+			$response_dump = ob_get_clean();
+
+			AKTT::log( sprintf( __( "Twitter API request was not successful. Dump of response:\n %s", 'twitter-tools'), $response_dump ) );
 		}
 		return false;
 	}
@@ -179,6 +185,7 @@ class AKTT_Account {
 // Save new tweets
 		foreach ($tweets as $tweet) {
 			if (in_array(AKTT_Tweet::guid_from_twid($tweet->id), $existing_guids)) {
+				AKTT::log( sprintf( __( 'Tweet %s is already in the DB. Skipping.', 'twitter-tools' ), AKTT_Tweet::guid_from_twid($tweet->id) ) );
 				continue;
 			}
 

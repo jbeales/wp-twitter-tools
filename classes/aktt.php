@@ -879,12 +879,15 @@ class AKTT {
 			switch ($_GET['aktt_action']) {
 				case 'download_account_tweets':
 					if (empty($_GET['acct_id']) || !AKTT::social_key_auth()) {
+						self::log( __( 'No acct_id or sociak_key_auth', 'twitter-tools' ) );
 						wp_die(__('Sorry, try again.', 'twitter-tools'));
 					}
 					$acct_id = intval($_GET['acct_id']);
 					self::get_social_accounts();
 					if (isset(self::$accounts[$acct_id])) {
+						self::log( sprintf( __('Fetching tweets for account %s', 'twitter-tools' ), $acct_id ) );
 						if ($tweets = self::$accounts[$acct_id]->download_tweets()) {
+							self::log( sprintf( __('Got %d tweets for account %s', 'twitter-tools' ), count( $tweets ), $acct_id ) );
 							self::$accounts[$acct_id]->save_tweets($tweets);
 						}
 					}
