@@ -138,13 +138,17 @@ class AKTT_Account {
 		));
 		if ($response !== false) {
 			$content = $response->body();
-			if ($content->result == 'success') {
-				return $content->response;
-			}
 
 			ob_start();
 			var_dump( $response );
 			$response_dump = ob_get_clean();
+
+			if ($content->result == 'success') {
+				AKTT::log( sprintf( __( "Twitter API request WAS successful. Dump of response:\n %s", 'twitter-tools'), $response_dump ) );
+				return $content->response;
+			}
+
+			
 
 			AKTT::log( sprintf( __( "Twitter API request was not successful. Dump of response:\n %s", 'twitter-tools'), $response_dump ) );
 		}
